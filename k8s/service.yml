@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mtd-hri-service
+  labels:
+    name: mtd-hri-service
+    app: mtd-hri-app
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 9981
+  selector:
+    name: mtd-hri-app-pod
+    app: mtd-hri-app

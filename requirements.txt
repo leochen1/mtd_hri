@@ -1,0 +1,10 @@
+requests
+beautifulsoup4
+uvicorn
+flask
+Flask-Cors
+gevent
+pymongo
+pandas
+chardet
+python-dotenv

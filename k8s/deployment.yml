@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mtd-hri-app-deployment
+  labels:
+    app: mtd-hri-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: mtd-hri-app-pod
+      app: mtd-hri-app
+  template:
+    metadata:
+      name: mtd-hri-app-pod
+      labels:
+        name: mtd-hri-app-pod
+        app: mtd-hri-app
+
+    spec:
+      imagePullSecrets:
+      - name: docker-registry-harbor
+      containers:
+      - name: mtd-hri-app
+        image: harbor.arfa.wise-paas.com/atmcmes/mtd-hri:1.0.2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9981
+        envFrom:
+        - configMapRef:
+            name: mtdhri-mongo-config
+        - secretRef:
+            name: kpidashboard-secret
+        resources:
+          requests:
+            cpu: 200m
+            memory: 200Mi
+            ephemeral-storage: 150Mi
+          limits:
+            cpu: 300m
+            memory: 300Mi
+            ephemeral-storage: 200Mi
