@@ -5,7 +5,7 @@ metadata:
   labels:
     app: mtd-hri-app
 spec:
-  replicas: 1
+  replicas: 5  # 設置為 5 個副本
   selector:
     matchLabels:
       name: mtd-hri-app-pod
@@ -16,8 +16,17 @@ spec:
       labels:
         name: mtd-hri-app-pod
         app: mtd-hri-app
-
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mtd-hri-app
+            topologyKey: "kubernetes.io/hostname"  # 確保 Pod 分佈在不同的節點上
       imagePullSecrets:
       - name: docker-registry-harbor
       containers:
