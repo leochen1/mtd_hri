@@ -5,6 +5,7 @@ from glob import glob
 from repository.pg_repo import fn_GetEnv
 import psycopg2
 from datetime import datetime
+import time
 
 def import_csvs_to_pg():
     # 設定 logging
@@ -52,16 +53,24 @@ def import_csvs_to_pg():
 
         # 寫入 PostgreSQL
         for _, row in df.iterrows():
-            sql = """
+            sql_delete = """
+                DELETE FROM hri.manufacturer_parts_list
+                WHERE mfr_part_number = %s
+            """
+            sql_insert = """
                 INSERT INTO hri.manufacturer_parts_list
                 (mfr_part_number, manufacturer, datasheet_url, availability, price, product_details, system_date)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
             values = [row.get(col, None) for col in pg_columns] + [row['system_date']]
             try:
-                cur.execute(sql, values)
+                # 先刪除相同的 mfr_part_number
+                cur.execute(sql_delete, (row['mfr_part_number'],))
+                # 再插入新資料
+                cur.execute(sql_insert, values)
             except Exception as e:
                 logging.error(f"寫入失敗: {e}，資料: {values}")
+            time.sleep(0.1)
 
         conn.commit()
         logging.info(f"{file_path} 匯入完成，共 {len(df)} 筆")

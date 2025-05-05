@@ -8,5 +8,5 @@ pymongo==4.10.1
 pandas==2.0.3
 chardet==5.2.0
 python-dotenv==1.0.1
-psycopg2==2.8.6
+psycopg2-binary==2.8.6
 schedule==1.2.2

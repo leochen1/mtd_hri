@@ -5,7 +5,7 @@ metadata:
   labels:
     app: mtd-hri-app
 spec:
-  replicas: 5  # 設置為 5 個副本
+  replicas: 1
   selector:
     matchLabels:
       name: mtd-hri-app-pod
@@ -31,7 +31,10 @@ spec:
       - name: docker-registry-harbor
       containers:
       - name: mtd-hri-app
-        image: harbor.arfa.wise-paas.com/atmcmes/mtd-hri:1.0.2
+        image: harbor.arfa.wise-paas.com/atmcmes/mtd-hri:1.0.4
+        env:
+        - name: TZ
+          value: "Asia/Taipei"
         imagePullPolicy: Always
         ports:
         - containerPort: 9981

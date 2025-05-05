@@ -81,15 +81,17 @@ def crawler_csv(mpn_list: list):
     MAX_HTML_RETRY = 3
 
     for query in mpn_list:
-        url = f"https://184.30.10.45/c/?q={query}"
+        url = f"https://www.mouser.tw/c/?q={query}"  # 184.30.10.45
         logging.info(f"[{query}] 組合目標 URL: {url}")
 
         # 每次請求隨機選擇一組 headers
         headers = random.choice(header_list)
         if headers is chrome_headers:
             print(f"[{query}] 本次使用 Chrome headers")
+            logging.info(f"[{query}] 本次使用 Chrome headers")
         elif headers is edge_headers:
             print(f"[{query}] 本次使用 Edge headers")
+            logging.info(f"[{query}] 本次使用 Edge headers")
         else:
             print(f"[{query}] 本次使用未知 headers")
 
@@ -133,15 +135,17 @@ def crawler_csv(mpn_list: list):
                         headers = random.choice(header_list)
                         if headers is chrome_headers:
                             print(f"[{query}] Retry 第 {html_retry} 次，使用 Chrome headers")
+                            logging.info(f"[{query}] Retry 第 {html_retry} 次，使用 Chrome headers")
                         elif headers is edge_headers:
                             print(f"[{query}] Retry 第 {html_retry} 次，使用 Edge headers")
+                            logging.info(f"[{query}] Retry 第 {html_retry} 次，使用 Edge headers")
                         else:
                             print(f"[{query}] Retry 第 {html_retry} 次，使用未知 headers")
                         session.headers.clear()
                         session.headers.update(headers)
                         
                         # 漸進式增加 sleep 時間
-                        sleep_time = [30, 1800, 2100, 2400][min(html_retry, 3)]
+                        sleep_time = [30, 1200, 1200, 1200][min(html_retry, 3)]
                         logging.info(f"[{query}] 第 {html_retry} 次重試，sleep {sleep_time} 秒")
                         time.sleep(sleep_time)
                 else:
@@ -170,7 +174,7 @@ def crawler_csv(mpn_list: list):
             if href_value.startswith("http"):
                 download_url = href_value
             else:
-                download_url = f"https://184.30.10.45{href_value}"
+                download_url = f"https://www.mouser.tw{href_value}"  # 184.30.10.45
             logging.info(f"[{query}] 找到下載連結: {download_url}")
 
             current_time = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -204,5 +208,7 @@ def crawler_csv(mpn_list: list):
         time.sleep(sleep_time)
 
     print("有找到 btn3 的清單：", found_btn3_list)
+    logging.info(f"有找到 btn3 的清單：{found_btn3_list}")
     print("未找到 btn3 的清單：", not_found_btn3_list)
+    logging.info(f"未找到 btn3 的清單：{not_found_btn3_list}")
 
