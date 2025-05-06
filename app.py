@@ -57,14 +57,14 @@ def main():
 
     # 1. 到datainsight的genieai查詢MPN清單
     dis_sql = '''
-                SELECT DISTINCT MPN FROM `genieai.HRI_Command_S`
+                SELECT DISTINCT MPN FROM `genieai.HRI_Command_S` WHERE DELIVERY_PLANT = 'TWM8'
             '''
     df = dis_query(dis_sql)
     mpn_list = df['MPN'].tolist()
     print(mpn_list)
 
     # 2. 依據MPN下載csv
-    # test_list = ['IAM-20680', 'LTM4625IY#PBF', 'BQ24190RGER', 'STM32H750IBK6', 'STM32F103VCT6', 'TPS2483PWR', 'LTM4700EY#PBF', 'SDINBDG4-16G-ZA']
+    # test_list = ['IAM-20680', 'LTM4625IY#PBF', 'BQ24190RGER', 'STM32H750IBK6', 'STM32F103VCT6', 'TPS2483PWR', 'LTM4700EY#PBF', 'SDINBDG4-16G-ZA', 'TLC7733QD']
     crawler_csv(mpn_list)
 
     # 3. CSV 下載成功，開始寫入 PostgreSQL
@@ -79,12 +79,25 @@ def main():
             logging.info(f"移動檔案 {src_path} 到 {dst_path}")
 
 if __name__ == '__main__':
-    # main()
+    execution_count = 0  # 初始化執行次數計數器
+
+    while True:
+        try:
+            execution_count += 1  # 每次執行前增加計數
+            logging.info(f"開始執行第 {execution_count} 次 main()")
+            main()  # 執行 main 函數
+            logging.info(f"第 {execution_count} 次 main() 執行完成")
+        except Exception as e:
+            logging.error(f"執行第 {execution_count} 次 main() 時發生錯誤: {str(e)}")
+        
+        # 可選：在每次執行完成後加入延遲，避免過於頻繁的執行
+        t.sleep(60)  # 延遲 60 秒後重新執行
+
 
     # schedule.every(2).minutes.do(main)  # 每 2 分鐘執行一次 main 函數
     # schedule.every().friday.at("18:00").do(main)  # 每週五下午 6:00 執行一次 main 函數
-    schedule.every().day.at("17:30").do(main)  # 每天下午 5:30 執行一次 main 函數
+    # schedule.every().day.at("17:30").do(main)  # 每天下午 5:30 執行一次 main 函數
 
-    while True:
-        schedule.run_pending()
-        t.sleep(1)
+    # while True:
+    #     schedule.run_pending()
+    #     t.sleep(1)
