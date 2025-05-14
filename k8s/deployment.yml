@@ -31,7 +31,7 @@ spec:
       - name: docker-registry-harbor
       containers:
       - name: mtd-hri-app
-        image: harbor.arfa.wise-paas.com/atmcmes/mtd-hri:1.0.5
+        image: harbor.arfa.wise-paas.com/atmcmes/mtd-hri:1.0.6
         env:
         - name: TZ
           value: "Asia/Taipei"

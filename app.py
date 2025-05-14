@@ -57,7 +57,7 @@ def main():
 
     # 1. 到datainsight的genieai查詢MPN清單
     dis_sql = '''
-                SELECT DISTINCT MPN FROM `genieai.HRI_Command_S` WHERE DELIVERY_PLANT = 'TWM8'
+                SELECT DISTINCT MPN FROM `genieai.HRI_Command_S` 
             '''
     df = dis_query(dis_sql)
     mpn_list = df['MPN'].tolist()
@@ -91,7 +91,7 @@ if __name__ == '__main__':
             logging.error(f"執行第 {execution_count} 次 main() 時發生錯誤: {str(e)}")
         
         # 可選：在每次執行完成後加入延遲，避免過於頻繁的執行
-        t.sleep(60)  # 延遲 60 秒後重新執行
+        t.sleep(1800)  # 延遲 1800 秒後重新執行
 
 
     # schedule.every(2).minutes.do(main)  # 每 2 分鐘執行一次 main 函數
